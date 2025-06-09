@@ -26,26 +26,24 @@ int mixcolumns(unsigned char state[4][4]) {
        0x03,0x01,0x01,0x02
     };
 
-   unsigned char a,b,c,d;
-   unsigned char cal_a,cal_b,cal_c,cal_d;
-   
-   a = state[0][0] * matrix[0][0];
-   b = state[0][0] * matrix[0][1];
-   c = state[0][0] * matrix[0][2];
-   d = state[0][0] * matrix[0][3];
+    unsigned char a,b,c,d;
+    unsigned char cal;
 
-   cal_a = a ^ b ^ c ^ d;
+    for (int i,j = 0; i < 4; i++,j++){
+        a = state[i][0] * matrix[i][0];
+        b = state[i][0] * matrix[i][1];
+        c = state[i][0] * matrix[i][2];
+        d = state[i][0] * matrix[i][3];
 
-   cal_a = out_a[0][0];
-
-    
+        cal = a ^ b ^ c ^ d;
+        cal = out_a[0][0];
+    }
 
     return 0;    
-
 }
 
-
+//for test
 int main(){
-    mixcolumns(in_state);
-    print_state();
+    unsigned char out = mixcolumns(in_state);
+    print_state(out);
 }
