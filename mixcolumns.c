@@ -2,7 +2,7 @@
 #include <stdint.h>
 
 unsigned char in_state [4] [4] = {
-    0x00, 0x01, 0x02, 0x03,
+    0x03, 0x01, 0x02, 0x03,
     0x04, 0x05, 0x06, 0x07,
     0x08, 0x09, 0x0A, 0x0B,
     0x0C, 0x0D, 0x0E, 0x0F
@@ -17,33 +17,14 @@ void print_state(unsigned char state[4][4]) {
     }
 }
 
-int mixcolumns(unsigned char state[4][4]) {
-    unsigned char out_a[4][0],out_b[4][0],out_c[4][0],out_d[4][0];
-    const unsigned char matrix[4][4] = {
-       0x02,0x03,0x01,0x01,
-       0x01,0x02,0x03,0x01,
-       0x01,0x01,0x02,0x03,
-       0x03,0x01,0x01,0x02
-    };
+void mixcolumns(unsigned char state[4][4]) {
 
-    unsigned char a,b,c,d;
-    unsigned char cal;
+    state[0][0] = (state[0][0] * 0x02) ^ (state[0][0] * 0x03) ^ state[0][0] ^ state[0][0];  
 
-    for (int i,j = 0; i < 4; i++,j++){
-        a = state[i][0] * matrix[i][0];
-        b = state[i][0] * matrix[i][1];
-        c = state[i][0] * matrix[i][2];
-        d = state[i][0] * matrix[i][3];
-
-        cal = a ^ b ^ c ^ d;
-        cal = out_a[0][0];
-    }
-
-    return 0;    
 }
 
 //for test
 int main(){
-    unsigned char out = mixcolumns(in_state);
-    print_state(out);
+    mixcolumns(in_state);
+    print_state(in_state);
 }

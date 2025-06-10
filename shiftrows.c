@@ -18,7 +18,7 @@ void print_state(unsigned char state[4][4]) {
 }
 
 
-int shiftrows(unsigned char state[4][4]) {
+void shiftrows(unsigned char state[4][4]) {
     unsigned char temp;
 
     // Shift row 1
@@ -43,8 +43,6 @@ int shiftrows(unsigned char state[4][4]) {
     state[3][2] = state[3][1];
     state[3][1] = temp;
 
-    return 0;
-    
 }
 
 int main(){
