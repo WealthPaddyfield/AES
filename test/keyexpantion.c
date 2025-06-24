@@ -67,9 +67,9 @@ void keyexpantion(unsigned char key[4][4]) {
 
   // Wordをここでとる
   unsigned char word_0[4] = {key[0][0], key[1][0], key[2][0], key[3][0]};
-  unsigned char word_1[4] = {key[0][0], key[0][1], key[0][2], key[0][3]};
-  unsigned char word_2[4] = {key[0][0], key[0][1], key[0][2], key[0][3]};
-  unsigned char word_3[4] = {key[0][0], key[0][1], key[0][2], key[0][3]};
+  unsigned char word_1[4] = {key[0][1], key[1][1], key[1][2], key[1][3]};
+  unsigned char word_2[4] = {key[0][2], key[0][1], key[1][2], key[1][3]};
+  unsigned char word_3[4] = {key[0][3], key[1][3], key[2][3], key[3][3]};
   // 鍵をいじっていない最初の1回目の処理をここに書いておく
 
   for (int i = 0; i < 10; i++) {
