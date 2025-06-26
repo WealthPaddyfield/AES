@@ -63,15 +63,35 @@ void function_g(unsigned char byte[4], int counter) {
   byte[0] ^= Rcon[counter];
 }
 
+void xor_calc(unsigned char first_word[4], unsigned char second_word[4],
+              unsigned char result[4]) {
+
+  result[0] = first_word[0] ^ second_word[0];
+  result[1] = first_word[1] ^ second_word[1];
+  result[2] = first_word[2] ^ second_word[2];
+  result[3] = first_word[3] ^ second_word[3];
+}
+
 void keyexpantion(unsigned char key[4][4]) {
 
   // Wordをここでとる
-  unsigned char word_0[4] = {key[0][0], key[1][0], key[2][0], key[3][0]};
-  unsigned char word_1[4] = {key[0][1], key[1][1], key[1][2], key[1][3]};
-  unsigned char word_2[4] = {key[0][2], key[0][1], key[1][2], key[1][3]};
-  unsigned char word_3[4] = {key[0][3], key[1][3], key[2][3], key[3][3]};
-  // 鍵をいじっていない最初の1回目の処理をここに書いておく
+  // 6/26 二次元配列を試す
+
+  unsigned char w[4][4] = {{key[0][0], key[1][0], key[2][0], key[3][0]},
+                           {key[0][1], key[1][1], key[1][2], key[1][3]},
+                           {key[0][2], key[1][2], key[2][2], key[3][2]},
+                           {key[0][3], key[1][3], key[2][3], key[3][3]}};
+
+  /*
+    unsigned char word_0[4] = {key[0][0], key[1][0], key[2][0], key[3][0]};
+    unsigned char word_1[4] = {key[0][1], key[1][1], key[1][2], key[1][3]};
+    unsigned char word_2[4] = {key[0][2], key[1][2], key[2][2], key[3][2]};
+    unsigned char word_3[4] = {key[0][3], key[1][3], key[2][3], key[3][3]};
+  */
+  // 鍵をいじっていない最初の1回目の処理をここに書いておく←最初だけ特別視せずともかけそう
+  // yappari muri kamo Wordをあつかった処理を始める
 
   for (int i = 0; i < 10; i++) {
+    if ()
   }
 }
