@@ -88,10 +88,10 @@ void keyexpantion(unsigned char key[4][4]) {
     unsigned char word_2[4] = {key[0][2], key[1][2], key[2][2], key[3][2]};
     unsigned char word_3[4] = {key[0][3], key[1][3], key[2][3], key[3][3]};
   */
-  // 鍵をいじっていない最初の1回目の処理をここに書いておく←最初だけ特別視せずともかけそう
-  // yappari muri kamo Wordをあつかった処理を始める
 
   for (int i = 0; i < 10; i++) {
-    if ()
+    if (i % 4 == 0) {
+      function_g(w[i - 1], i);
+    }
   }
 }
