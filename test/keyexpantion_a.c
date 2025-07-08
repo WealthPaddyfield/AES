@@ -98,3 +98,4 @@ void keyexpantion(unsigned char key[4][4]) {
     }
     i++;
   }
+}
