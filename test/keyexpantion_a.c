@@ -73,22 +73,28 @@ void function_g(unsigned char byte[4], int counter) {
 }*/
 
 void keyexpantion(unsigned char key[4][4]) {
+  unsigned char w[44][4]; // AES-128: 4*11 = 44 words
 
-  // Wordをここでとる
-  // 6/26 二次元配列を試す
-
-  unsigned char w[4][4] = {{key[0][0], key[1][0], key[2][0], key[3][0]},
-                           {key[0][1], key[1][1], key[1][2], key[1][3]},
-                           {key[0][2], key[1][2], key[2][2], key[3][2]},
-                           {key[0][3], key[1][3], key[2][3], key[3][3]}};
-
-  /*
-    unsigned char word_0[4] = {key[0][0], key[1][0], key[2][0], key[3][0]};
-    unsigned char word_1[4] = {key[0][1], key[1][1], key[1][2], key[1][3]};
-    unsigned char word_2[4] = {key[0][2], key[1][2], key[2][2], key[3][2]};
-    unsigned char word_3[4] = {key[0][3], key[1][3], key[2][3], key[3][3]};
-  */
-
-  for (int i = 0; i < 10; i++) {
+  // 初期鍵をW[0]〜W[3]にコピー（列単位）
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      w[i][j] = key[j][i];
+    }
   }
-}
+
+  unsigned char temp[4];
+  int i = 4;
+  while (i < 44) {
+    for (int j = 0; j < 4; j++) {
+      temp[j] = w[i - 1][j];
+    }
+
+    if (i % 4 == 0) {
+      function_g(temp, (i / 4) - 1);
+    }
+
+    for (int j = 0; j < 4; j++) {
+      w[i][j] = w[i - 4][j] ^ temp[j];
+    }
+    i++;
+  }
