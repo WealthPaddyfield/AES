@@ -98,20 +98,22 @@ void keyexpantion(unsigned char key[4][4]) {
     }
     i++;
   }
+}
 
-  /*  for (int round = 0; round < 11; round++) {
-      printf("Round %d key:\n", round);
-      for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 4; col++) {
-          printf("%02X ", w[round * 4 + col][row]);
-        }
-        printf("\n");
+/*  for (int round = 0; round < 11; round++) {
+    printf("Round %d key:\n", round);
+    for (int row = 0; row < 4; row++) {
+      for (int col = 0; col < 4; col++) {
+        printf("%02X ", w[round * 4 + col][row]);
       }
       printf("\n");
-    }*/
+    }
+    printf("\n");
+  }
 }
 
 int main() {
-  keyexpantion((unsigned char (*)[4])key);
-  return 0;
+keyexpantion((unsigned char (*)[4])key);
+return 0;
 }
+*/
