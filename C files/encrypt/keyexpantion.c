@@ -1,8 +1,7 @@
 #include <stdio.h>
 
-const unsigned char key[4][4] = {0x22, 0xE1, 0x8E, 0x87, 0x3F, 0xB1,
-                                 0x4B, 0xA1, 0x36, 0x8A, 0xDD, 0x7E,
-                                 0x10, 0xC6, 0x7F, 0xF5};
+unsigned char key[4][4] = {0x22, 0xE1, 0x8E, 0x87, 0x3F, 0xB1, 0x4B, 0xA1,
+                           0x36, 0x8A, 0xDD, 0x7E, 0x10, 0xC6, 0x7F, 0xF5};
 
 const unsigned char sbox[][16] = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b,
@@ -28,6 +27,15 @@ const unsigned char sbox[][16] = {
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f,
     0xb0, 0x54, 0xbb, 0x16,
 };
+
+void print_state(unsigned char state[4][4]) {
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      printf("%02x ", state[i][j]);
+    }
+    printf("\n");
+  }
+}
 
 int subbytes(unsigned char in) {
   unsigned char upper, lower;
@@ -63,32 +71,51 @@ void function_g(unsigned char byte[4], int counter) {
   byte[0] ^= Rcon[counter];
 }
 
-/*void xor_calc(unsigned char first_word[4], unsigned char second_word[4],
-              unsigned char result[4]) {
+void keyexpantion(unsigned char key[4][4], unsigned char w[44][4]) {
 
-  result[0] = first_word[0] ^ second_word[0];
-  result[1] = first_word[1] ^ second_word[1];
-  result[2] = first_word[2] ^ second_word[2];
-  result[3] = first_word[3] ^ second_word[3];
-}*/
+  // 初期鍵をW[0]〜W[3]にコピー（列単位）
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      w[i][j] = key[j][i];
+    }
+  }
 
-void keyexpantion(unsigned char key[4][4]) {
+  unsigned char temp[4];
+  int i = 4;
+  while (i < 44) {
+    for (int j = 0; j < 4; j++) {
+      temp[j] = w[i - 1][j];
+    }
 
-  // Wordをここでとる
-  // 6/26 二次元配列を試す
+    if (i % 4 == 0) {
+      function_g(temp, (i / 4) - 1);
+    }
 
-  unsigned char w[4][4] = {{key[0][0], key[1][0], key[2][0], key[3][0]},
-                           {key[0][1], key[1][1], key[1][2], key[1][3]},
-                           {key[0][2], key[1][2], key[2][2], key[3][2]},
-                           {key[0][3], key[1][3], key[2][3], key[3][3]}};
-
-  /*
-    unsigned char word_0[4] = {key[0][0], key[1][0], key[2][0], key[3][0]};
-    unsigned char word_1[4] = {key[0][1], key[1][1], key[1][2], key[1][3]};
-    unsigned char word_2[4] = {key[0][2], key[1][2], key[2][2], key[3][2]};
-    unsigned char word_3[4] = {key[0][3], key[1][3], key[2][3], key[3][3]};
-  */
-
-  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < 4; j++) {
+      w[i][j] = w[i - 4][j] ^ temp[j];
+    }
+    i++;
   }
 }
+
+static unsigned char round_keys[44][4];
+
+void setkey(unsigned char *key) {
+  unsigned char key_matrix[4][4];
+  for (int col = 0; col < 4; col++) {
+    for (int row = 0; row < 4; row++) {
+      key_matrix[row][col] = key[col * 4 + row];
+    }
+  }
+  keyexpantion(key_matrix, round_keys);
+}
+
+void get_roundkey(unsigned char roundkey[4][4], unsigned char w[44][4],
+                  int round) {
+  for (int col = 0; col < 4; col++) {
+    for (int row = 0; row < 4; row++) {
+      roundkey[row][col] = w[round * 4 + col][row];
+    }
+  }
+}
+int main() { return 0; }
