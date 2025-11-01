@@ -91,7 +91,7 @@ const unsigned char inv_sbox[][16] = {
     0x17, 0x2B, 0x04, 0x7E, 0xBA, 0x77, 0xD6, 0x26, 0xE1, 0x69, 0x14, 0x63,
     0x55, 0x21, 0x0C, 0x7D};
 
-int inv_subbytes(unsigned char in) {
+unsigned char inv_subbytes(unsigned char in) {
   unsigned char upper, lower;
   upper = in >> 4;
   // lower = (in << 4) >> 4;
@@ -244,10 +244,19 @@ void setkey(unsigned char *key) {
   keyexpantion(key_matrix, round_keys);
 }
 
+void print_block(const char *label, const unsigned char *data) {
+  printf("%s: ", label);
+  for (int i = 0; i < 16; i++) {
+    printf("%02x ", data[i]);
+  }
+  printf("\n");
+}
+
 int main() {
 
   unsigned char state[4][4];
   unsigned char round_key[4][4];
+  unsigned char output[16];
 
   for (int col = 0; col < 4; col++) {
     for (int row = 0; row < 4; row++) {
@@ -257,10 +266,10 @@ int main() {
 
   setkey(key);
 
-  get_roundkey(round_key, round_keys, 0);
+  get_roundkey(round_key, round_keys, 10);
   addroundkey(state, round_key);
 
-  for (int round = 1; round < 10; round++) {
+  for (int round = 9; round >= 1; --round) {
 
     inv_shiftrows(state);
 
@@ -285,9 +294,16 @@ int main() {
     }
   }
 
-  get_roundkey(round_key, round_keys, 10);
+  get_roundkey(round_key, round_keys, 0);
   addroundkey(state, round_key);
 
-  print_state(state);
+  for (int col = 0; col < 4; col++) {
+    for (int row = 0; row < 4; row++) {
+      output[col * 4 + row] = state[row][col];
+    }
+  }
+
+  print_block("plain", output);
+
   return 0;
 }
