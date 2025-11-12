@@ -7,7 +7,7 @@ unsigned char subbyte(unsigned char in) {
   return sbox[upper][lower];
 }
 
-// 4×4 state
+// for 4×4 state
 void subbytes(unsigned char state[4][4]) {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
