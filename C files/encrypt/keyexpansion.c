@@ -1,7 +1,19 @@
 #include <stdio.h>
 
-unsigned char key[4][4] = {0x22, 0xE1, 0x8E, 0x87, 0x3F, 0xB1, 0x4B, 0xA1,
-                           0x36, 0x8A, 0xDD, 0x7E, 0x10, 0xC6, 0x7F, 0xF5};
+// test
+void print_roundkey(int round, const unsigned char w[44][4]) {
+  int col, row;
+  printf("Round %2d: ", round);
+  for (col = 0; col < 4; col++) {
+    for (row = 0; row < 4; row++) {
+      printf("%02x ", w[round * 4 + col][row]);
+    }
+  }
+  printf("\n");
+}
+
+unsigned char key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae, 0xd2, 0xa6,
+                         0xab, 0xf7, 0x15, 0x88, 0x09, 0xcf, 0x4f, 0x3c};
 
 const unsigned char sbox[][16] = {
     0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b,
@@ -27,15 +39,6 @@ const unsigned char sbox[][16] = {
     0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f,
     0xb0, 0x54, 0xbb, 0x16,
 };
-
-void print_state(unsigned char state[4][4]) {
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
-      printf("%02x ", state[i][j]);
-    }
-    printf("\n");
-  }
-}
 
 int subbytes(unsigned char in) {
   unsigned char upper, lower;
@@ -71,7 +74,7 @@ void function_g(unsigned char byte[4], int counter) {
   byte[0] ^= Rcon[counter];
 }
 
-void keyexpantion(unsigned char key[4][4], unsigned char w[44][4]) {
+void keyexpansion(unsigned char key[4][4], unsigned char w[44][4]) {
 
   // 初期鍵をW[0]〜W[3]にコピー（列単位）
   for (int i = 0; i < 4; i++) {
@@ -97,7 +100,7 @@ void keyexpantion(unsigned char key[4][4], unsigned char w[44][4]) {
     i++;
   }
 }
-
+/*
 static unsigned char round_keys[44][4];
 
 void setkey(unsigned char *key) {
@@ -118,4 +121,19 @@ void get_roundkey(unsigned char roundkey[4][4], unsigned char w[44][4],
     }
   }
 }
-int main() { return 0; }
+*/
+int main(void) {
+  unsigned char key_matrix[4][4];
+  for (int col = 0; col < 4; col++) {
+    for (int row = 0; row < 4; row++) {
+      key_matrix[row][col] = key[col * 4 + row];
+    }
+  }
+
+  unsigned char w[44][4];
+  keyexpansion(key_matrix, w);
+  for (int r = 0; r <= 10; r++) {
+    print_roundkey(r, w);
+  }
+  return 0;
+}

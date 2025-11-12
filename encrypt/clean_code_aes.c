@@ -17,13 +17,6 @@ unsigned char key[4][4] = {{0x2b, 0x28, 0xab, 0x09},
                            {0x15, 0xd2, 0x15, 0x4f},
                            {0x16, 0xa6, 0x88, 0x3c}};
 
-unsigned char subbytes(unsigned char in);
-void subbytes_all(unsigned char state[4][4]) {
-  for (int i = 0; i < 4; i++)
-    for (int j = 0; j < 4; j++)
-      state[i][j] = subbytes(state[i][j]);
-}
-
 void print_state(unsigned char state[4][4]) {
   printf("State:\n");
   for (int i = 0; i < 4; i++) {
@@ -32,6 +25,13 @@ void print_state(unsigned char state[4][4]) {
     }
     printf("\n");
   }
+}
+
+unsigned char subbytes(unsigned char in);
+void subbytes_all(unsigned char state[4][4]) {
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      state[i][j] = subbytes(state[i][j]);
 }
 
 void get_roundkey(unsigned char roundkey[4][4], unsigned char w[44][4],
