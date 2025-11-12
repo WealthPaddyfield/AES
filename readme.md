@@ -7,4 +7,4 @@ AES in C language
 
  - clone this branch command
 
-`git clone -b comm https://github.com/WealthPaddyfield/AES.git`
+`git clone -b conn https://github.com/WealthPaddyfield/AES.git`
