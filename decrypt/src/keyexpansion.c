@@ -1,6 +1,7 @@
 #include "../include/keyexpansion.h"
 #include "../include/sbox.h"
 #include "../include/inv_subbytes.h"
+#include "../include/aes_key_config.h"
 
 void function_g(unsigned char byte[4], int counter) {
 

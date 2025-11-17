@@ -31,7 +31,6 @@ void aes_decrypt_block(const unsigned char input[16], unsigned char output[16], 
     get_roundkey(round_key, round_keys, AES_NR);
     addroundkey(state, round_key);
 
-    // ラウンド処理
     for (int round = AES_NR - 1; round >= 1; --round)
     {
         inv_shiftrows(state);
