@@ -1,3 +1,5 @@
 #pragma once
 
-void keyexpansion(unsigned char key[4][4], unsigned char w[44][4]);
+#include "aes_key_config.h"
+
+void keyexpansion(unsigned char key[4][4], unsigned char w[AES_WORDS][4]);

@@ -23,29 +23,30 @@ void function_g(unsigned char byte[4], int counter) {
   byte[0] ^= Rcon[counter];
 }
 
-void keyexpansion(unsigned char key[4][4], unsigned char w[44][4]) {
+void keyexpansion(unsigned char key[4][AES_NK], unsigned char w[AES_WORDS][4]) {
+  int i, j;
 
-  // 初期鍵をW[0]〜W[3]にコピー（列単位）
-  for (int i = 0; i < 4; i++) {
-    for (int j = 0; j < 4; j++) {
+  for (i = 0; i < AES_NK; ++i)
+    for (j = 0; j < 4; ++j)
       w[i][j] = key[j][i];
-    }
-  }
 
   unsigned char temp[4];
-  int i = 4;
-  while (i < 44) {
-    for (int j = 0; j < 4; j++) {
+  i = AES_NK;
+  while (i < AES_WORDS) {
+    for (j = 0; j < 4; ++j)
       temp[j] = w[i - 1][j];
+
+    if (i % AES_NK == 0) {
+      function_g(temp, (i / AES_NK) - 1);
+    } else if (AES_NK == 8 && (i % AES_NK) == 4) {
+      // AES-256 のみの追加処理（SubWord）
+      for (j = 0; j < 4; ++j) {
+        temp[j] = sbox[temp[j] >> 4][temp[j] & 0x0F];
+      }
     }
 
-    if (i % 4 == 0) {
-      function_g(temp, (i / 4) - 1);
-    }
-
-    for (int j = 0; j < 4; j++) {
-      w[i][j] = w[i - 4][j] ^ temp[j];
-    }
-    i++;
+    for (j = 0; j < 4; ++j)
+      w[i][j] = w[i - AES_NK][j] ^ temp[j];
+    ++i;
   }
 }
