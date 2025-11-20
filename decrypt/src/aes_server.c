@@ -44,7 +44,7 @@ int main(void) {
   }
 
   // ファイルをオープンする
-  output_fd = open("output.txt", O_RDWR | O_CREAT | O_TRUNC, 0644);
+  output_fd = open("output.bin", O_RDWR | O_CREAT | O_TRUNC, 0644);
   if (output_fd < 0) {
     perror("open");
     close(connfd);
@@ -54,7 +54,7 @@ int main(void) {
   // 時間計測開始
   start = clock();
 
-  //修正：ファイルサイズをネットワークバイトオーダーで受け取り、ホストオーダーに変換
+  // 修正：ファイルサイズをネットワークバイトオーダーで受け取り、ホストオーダーに変換
   uint32_t net_file_size;
   nbytes = read(connfd, &net_file_size, sizeof(net_file_size));
   if (nbytes != sizeof(net_file_size)) {

@@ -114,7 +114,9 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  // パディング　今回はちょうど１６バイトの倍数のデータであっても0x10で埋めたブロックを一つケツにつけてます
+  // パディング　今回はちょうど１６バイトの倍数のデータであっても0x10(16)で埋めたブロックを一つケツにつけてます
+  // 倍数でない場合(追加する場合)は追加する数のデータで埋める
+  // １０バイトのデータなら0x06を10個
   size_t padded_len = 0;
   unsigned char *padded =
       pkcs7_pad((unsigned char *)file_buf, (size_t)f_siz, &padded_len);
