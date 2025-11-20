@@ -3,12 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../include/PKCS#7.h"
 #include "../include/addroundkey.h"
 #include "../include/getroundkey.h"
-#include "../include/keyexpansion.h"
+// #include "../include/keyexpansion.h"
 #include "../include/mixcolumns.h"
-#include "../include/sbox.h"
+// #include "../include/sbox.h"
 #include "../include/shiftrows.h"
 #include "../include/subbytes.h"
 
