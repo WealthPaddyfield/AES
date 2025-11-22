@@ -5,7 +5,7 @@ AES in C language
 
 100% free !
 
- - clone this branch command
+ - clone this branch command  
 `git clone -b actual https://github.com/WealthPaddyfield/AES.git`
   
  - gcc compile command(client_side)  
