@@ -9,10 +9,11 @@ AES in C language
 
 `git clone -b actual https://github.com/WealthPaddyfield/AES.git`
 
- - gcc compile command(client_side)
+ - gcc compile command(client_side)  
 `gcc -Iinclude client_side/src/*.c -o compiled/client.out`  
-- gcc compile command(server_side)
+- gcc compile command(server_side)  
 `gcc -Iinclude server_side/src/*.c -o compiled/server.out`  
+  
 - change key length
 
 |Key length| NR | NK | NB | WORDS |  
