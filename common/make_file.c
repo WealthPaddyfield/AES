@@ -4,7 +4,7 @@
 
 int main(){
     FILE *fp;
-    long fileSize = 16 * 11 / 4;
+    long fileSize = 211 * 4 / 4;
     long i;
     int random_num;
 

@@ -22,17 +22,21 @@
 //  鍵拡張
 unsigned char round_keys[AES_WORDS][4];
 
-void aes_setkey(unsigned char *key) {
+void aes_setkey(unsigned char *key)
+{
   unsigned char key_matrix[4][AES_NK];
-  for (int col = 0; col < AES_NK; col++) {
-    for (int row = 0; row < 4; row++) {
+  for (int col = 0; col < AES_NK; col++)
+  {
+    for (int row = 0; row < 4; row++)
+    {
       key_matrix[row][col] = key[col * 4 + row];
     }
   }
   keyexpansion(key_matrix, round_keys);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   int sockfd, nbytes;
   struct sockaddr_in servaddr;
   int fd;
@@ -43,9 +47,22 @@ int main(int argc, char *argv[]) {
   unsigned char input[16];
   FILE *file_fp;
 
+  /*
   const unsigned char key[16] = {0x2b, 0x7e, 0x15, 0x16, 0x28, 0xae,
-                                 0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88,
-                                 0x09, 0xcf, 0x4f, 0x3c};
+    0xd2, 0xa6, 0xab, 0xf7, 0x15, 0x88,
+        0x09, 0xcf, 0x4f, 0x3c};
+  */
+
+  // 192bit
+  // const unsigned char key[24] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+  //                                0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+  //                                0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77};
+
+  // 256bit
+  unsigned char key[32] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+                           0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+                           0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+                           0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff};
 
   // file_fp = fopen(filename, "rb");
   // // バイナリをステートに変換しarg[1]のファイルを変更
@@ -58,7 +75,8 @@ int main(int argc, char *argv[]) {
   // aes_encrypt_file(input, filename, round_keys);
 
   file_fp = fopen(filename, "rb");
-  if (!file_fp) {
+  if (!file_fp)
+  {
     perror("fopen");
     return 1;
   }
@@ -67,7 +85,8 @@ int main(int argc, char *argv[]) {
   (void)items_read;
   fclose(file_fp);
 
-  if ((fd = open(filename, O_RDONLY)) < 0) {
+  if ((fd = open(filename, O_RDONLY)) < 0)
+  {
     perror("open");
     close(sockfd);
     exit(1);
@@ -79,19 +98,22 @@ int main(int argc, char *argv[]) {
   printf("client: transmit file size:%d\n", f_siz);
   // fflush(stdout); exit(0);
 
-  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+  {
     perror("socket");
     exit(1);
   }
   bzero(&servaddr, sizeof(servaddr));
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(10000);
-  if (inet_pton(AF_INET, "127.0.0.1", &servaddr.sin_addr) < 0) {
+  if (inet_pton(AF_INET, "127.0.0.1", &servaddr.sin_addr) < 0)
+  {
     perror("inet_pton");
     exit(1);
   }
 
-  if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
+  if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
+  {
     perror("connect");
     exit(1);
   }
@@ -99,14 +121,16 @@ int main(int argc, char *argv[]) {
   // 暗号化処理をここから
   // ファイルを読み込む
   file_buf = malloc(f_siz);
-  if (!file_buf) {
+  if (!file_buf)
+  {
     perror("malloc");
     close(fd);
     close(sockfd);
     return 1;
   }
 
-  if (read(fd, file_buf, f_siz) != f_siz) {
+  if (read(fd, file_buf, f_siz) != f_siz)
+  {
     perror("read");
     free(file_buf);
     close(fd);
@@ -121,7 +145,8 @@ int main(int argc, char *argv[]) {
   unsigned char *padded =
       pkcs7_pad((unsigned char *)file_buf, (size_t)f_siz, &padded_len);
   free(file_buf);
-  if (!padded) {
+  if (!padded)
+  {
     perror("pkcs7_pad");
     close(fd);
     close(sockfd);
@@ -131,7 +156,8 @@ int main(int argc, char *argv[]) {
   // AESの本質的な処理
   aes_setkey((unsigned char *)key);
   unsigned char *ciphertext = malloc(padded_len);
-  if (!ciphertext) {
+  if (!ciphertext)
+  {
     perror("malloc");
     free(padded);
     close(fd);
@@ -139,7 +165,8 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  for (size_t off = 0; off < padded_len; off += TOTAL_BYTES) {
+  for (size_t off = 0; off < padded_len; off += TOTAL_BYTES)
+  {
     aes_encrypt_block(padded + off, ciphertext + off, round_keys);
   }
 
@@ -150,16 +177,19 @@ int main(int argc, char *argv[]) {
   int n_send = (int)(padded_len / TOTAL_BYTES);
 
   uint32_t netlen = htonl((uint32_t)padded_len);
-  if (write(sockfd, &netlen, sizeof(netlen)) != sizeof(netlen)) {
+  if (write(sockfd, &netlen, sizeof(netlen)) != sizeof(netlen))
+  {
     perror("write len");
     free(ciphertext);
     close(sockfd);
     return 1;
   }
 
-  for (int i = 0; i < n_send; i++) {
+  for (int i = 0; i < n_send; i++)
+  {
     ssize_t w = write(sockfd, ciphertext + (i * TOTAL_BYTES), TOTAL_BYTES);
-    if (w != TOTAL_BYTES) {
+    if (w != TOTAL_BYTES)
+    {
       perror("write block");
       free(ciphertext);
       close(sockfd);
