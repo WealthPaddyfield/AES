@@ -131,12 +131,10 @@ int main(void) {
     exit(1);
   }
 
-  aes_setkey((unsigned char *)key);
-
   // ブロック単位で復号
   size_t block_size = 16;
   if (file_size % block_size != 0) {
-    fprintf(stderr, "ciphertext size is not multiple of block size\n");
+    fprintf(stderr, "暗号文がブロックサイズ(16)の倍数じゃない\n");
     free(cipher_buf);
     free(plain_buf);
     close(output_fd);
@@ -144,6 +142,8 @@ int main(void) {
     close(listenfd);
     exit(1);
   }
+
+  aes_setkey((unsigned char *)key);
 
   size_t n_blocks = file_size / block_size;
   for (size_t i = 0; i < n_blocks; ++i) {
@@ -155,6 +155,8 @@ int main(void) {
   ssize_t plain_len = pkcs7_unpad(plain_buf, file_size);
   if (plain_len < 0) {
     fprintf(stderr, "pkcs7_unpad failed (invalid padding)\n");
+
+    fprintf(stderr, "\n");
     free(cipher_buf);
     free(plain_buf);
     close(output_fd);
@@ -189,6 +191,7 @@ int main(void) {
   close(listenfd);
   return 0;
 }
+
 /*
 //
 修正：ファイルサイズをネットワークバイトオーダーで受け取り、ホストオーダーに変換
