@@ -6,10 +6,10 @@ AES in C language
 100% free !
 
  - clone this branch command  
-`git clone https://github.com/WealthPaddyfield/AES.git`
+`git clone -b actual https://github.com/WealthPaddyfield/AES.git`
   
  - gcc compile command(client_side)  
-`gcc -Iinclude client_side/src/*.c -o compiled/client.out`  
+`gcc -I：include client_side/src/*.c -o compiled/client.out`  
 - gcc compile command(server_side)  
 `gcc -Iinclude server_side/src/*.c -o compiled/server.out`  
   
